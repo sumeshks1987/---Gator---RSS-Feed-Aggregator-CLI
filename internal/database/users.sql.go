@@ -7,6 +7,8 @@ package database
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -17,6 +19,42 @@ RETURNING id, created_at, updated_at, name
 
 func (q *Queries) CreateUser(ctx context.Context, name string) (User, error) {
 	row := q.db.QueryRow(ctx, createUser, name)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Name,
+	)
+	return i, err
+}
+
+const getAnyUser = `-- name: GetAnyUser :one
+SELECT id, created_at, updated_at, name
+FROM users
+LIMIT 1
+`
+
+func (q *Queries) GetAnyUser(ctx context.Context) (User, error) {
+	row := q.db.QueryRow(ctx, getAnyUser)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Name,
+	)
+	return i, err
+}
+
+const getUserByID = `-- name: GetUserByID :one
+SELECT id, created_at, updated_at, name
+FROM users
+WHERE id = $1
+`
+
+func (q *Queries) GetUserByID(ctx context.Context, id pgtype.UUID) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByID, id)
 	var i User
 	err := row.Scan(
 		&i.ID,

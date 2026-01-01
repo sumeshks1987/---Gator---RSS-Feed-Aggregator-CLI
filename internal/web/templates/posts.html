@@ -1,0 +1,11 @@
+{{ define "content" }}
+<h2>Posts</h2>
+
+{{ range . }}
+    <div style="margin-bottom: 20px;">
+        <strong>{{ .FeedName }}</strong><br/>
+        <a href="{{ .Url }}" target="_blank">{{ .Title }}</a>
+    </div>
+{{ end }}
+
+{{ end }}

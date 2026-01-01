@@ -1,0 +1,8 @@
+{{ define "content" }}
+<h2>Feeds</h2>
+<ul>
+{{ range . }}
+    <li>{{ .Name }} — {{ .Url }}</li>
+{{ end }}
+</ul>
+{{ end }}
